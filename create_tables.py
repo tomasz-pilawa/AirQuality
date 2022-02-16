@@ -17,7 +17,7 @@ def create_table_stations():
     city_name TEXT,
     communeName TEXT,
     districtName TEXT,
-    provinceName TEXT,
+    provinceName TEXT);
     ''')
     conn.commit()
     conn.close()
