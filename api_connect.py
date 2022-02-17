@@ -20,7 +20,14 @@ def get_stations(url_api=all_stations):
 
     # print(list(df.columns))   # used earlier to get column lists for renaming
 
-    json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
+    # json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
+
+    json_list = df.values.tolist()
+
+    for entry in json_list:
+        entry[2] = float(entry[2])
+        entry[3] = float(entry[3])
+        entry[5] = int(entry[5])
 
     return json_list
 
@@ -28,8 +35,12 @@ def get_stations(url_api=all_stations):
 # check if encapsulation works:
 data = get_stations()
 print(data)
-print(len(data))
+print(type(data))
 print(data[0])
+
+for x in data[0]:
+    print(x)
+    print(type(x))
 
 
 def populate_db_stations(stations_data):
@@ -47,6 +58,5 @@ def populate_db_stations(stations_data):
 
     conn.commit()
     conn.close()
-
 
 # populate_db_stations(data)
