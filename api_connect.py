@@ -77,6 +77,3 @@ def get_sensors(limit=1):
 # checking if works
 three_params = get_sensors(limit=1)
 
-for x in three_params[0]:
-    print(x)
-    print(type(x))

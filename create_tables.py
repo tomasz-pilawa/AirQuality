@@ -21,3 +21,18 @@ def create_table_stations():
     ''')
     conn.commit()
     conn.close()
+
+
+def create_table_sensors():
+    conn = sqlite3.connect('air_quality.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS sensors (
+    id INTEGER,
+    stationId INTEGER,
+    paramName TEXT,
+    paramFormula TEXT,
+    paramCode TEXT,
+    idParam INTEGER);
+    ''')
+    conn.commit()
+    conn.close()
