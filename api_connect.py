@@ -38,3 +38,24 @@ def populate_db_stations(data):
     conn.commit()
     conn.close()
 
+
+def get_stations_indexes():
+    data = get_stations()
+    indexes = []
+    for d in data:
+        indexes.append(d[0])
+    return sorted(indexes)
+
+
+def get_sensors(limit=1):
+    indexes = get_stations_indexes()
+    url = 'https://api.gios.gov.pl/pjp-api/rest/station/sensors/'
+
+    if limit > len(indexes):
+        limit = len(indexes)
+
+    for index in indexes[:limit]:
+        print(f'{url}{index}')
+
+
+get_sensors(limit=2)
