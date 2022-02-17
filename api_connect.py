@@ -9,7 +9,6 @@ all_stations = 'https://api.gios.gov.pl/pjp-api/rest/station/findAll'
 
 def get_stations(url_api=all_stations):
     response = requests.get(url_api)
-    print(f'Response Code is: {response.status_code}')
 
     data_json = response.json()
 
@@ -51,6 +50,8 @@ def get_sensors(limit=1):
     indexes = get_stations_indexes()
     base_url = 'https://api.gios.gov.pl/pjp-api/rest/station/sensors/'
     urls = []
+    all_data = pd.DataFrame(
+        columns=['id', 'stationId', 'param_paramName', 'param_paramFormula', 'param_paramCode', 'param_idParam'])
 
     if limit > len(indexes):
         limit = len(indexes)
@@ -58,7 +59,14 @@ def get_sensors(limit=1):
     for index in indexes[:limit]:
         urls.append(f'{base_url}{index}')
 
-    print(urls)
+    for url in urls:
+        response = requests.get(url)
+        print(url)
+        print(f'Response Code is: {response.status_code}')
+        data_json = response.json()
+        df = pd.json_normalize(data_json, sep='_')
+        all_data = pd.concat([all_data, df], ignore_index=True)
 
+    print(all_data)
 
-get_sensors(limit=2)
+get_sensors(limit=3)
