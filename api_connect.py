@@ -49,13 +49,16 @@ def get_stations_indexes():
 
 def get_sensors(limit=1):
     indexes = get_stations_indexes()
-    url = 'https://api.gios.gov.pl/pjp-api/rest/station/sensors/'
+    base_url = 'https://api.gios.gov.pl/pjp-api/rest/station/sensors/'
+    urls = []
 
     if limit > len(indexes):
         limit = len(indexes)
 
     for index in indexes[:limit]:
-        print(f'{url}{index}')
+        urls.append(f'{base_url}{index}')
+
+    print(urls)
 
 
 get_sensors(limit=2)
