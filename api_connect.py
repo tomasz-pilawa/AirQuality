@@ -67,6 +67,16 @@ def get_sensors(limit=1):
         df = pd.json_normalize(data_json, sep='_')
         all_data = pd.concat([all_data, df], ignore_index=True)
 
-    print(all_data)
+    all_data = all_data.rename(columns={'param_paramName': 'paramName', 'param_paramFormula': 'paramFormula',
+                                        'param_paramCode': 'paramCode', 'param_idParam': 'idParam'})
+    json_list = all_data.values.tolist()
 
-get_sensors(limit=3)
+    return json_list
+
+
+# checking if works
+three_params = get_sensors(limit=1)
+
+for x in three_params[0]:
+    print(x)
+    print(type(x))
