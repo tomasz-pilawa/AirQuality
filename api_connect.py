@@ -1,24 +1,32 @@
 import requests
 import pandas as pd
 import json
+import sqlite3
 
 pd.set_option('display.max_columns', None)
 
 all_stations = 'https://api.gios.gov.pl/pjp-api/rest/station/findAll'
 
-response = requests.get(all_stations)
-print(response.status_code)
 
-jos = response.json()
+def populate_stations(url_api=all_stations):
+    response = requests.get(url_api)
+    print(f'Response Code is: {response.status_code}')
 
-df = pd.json_normalize(jos, sep='_')
-df = df.rename(columns={'city_commune_communeName': 'communeName', 'city_commune_districtName': 'districtName',
-                        'city_commune_provinceName': 'provinceName'})
+    data_json = response.json()
 
-print(df)
+    df = pd.json_normalize(data_json, sep='_')
+    df = df.rename(columns={'city_commune_communeName': 'communeName', 'city_commune_districtName': 'districtName',
+                            'city_commune_provinceName': 'provinceName'})
 
-print(list(df.columns))
+    # print(list(df.columns))   # used earlier to get column lists for renaming
 
-json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
-print(json_list)
-print(json_list[0])
+    json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
+
+    return json_list
+
+
+# check if encapsulation works:
+data = populate_stations()
+print(data)
+print(len(data))
+print(data[0])
