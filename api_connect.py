@@ -19,8 +19,7 @@ def get_stations(url_api=all_stations):
                             'city_commune_provinceName': 'provinceName'})
 
     # print(list(df.columns))   # used earlier to get column lists for renaming
-
-    # json_list = json.loads(json.dumps(list(df.T.to_dict().values())))
+    # json_list = json.loads(json.dumps(list(df.T.to_dict().values())))     # before it was used
 
     json_list = df.values.tolist()
 
@@ -32,31 +31,23 @@ def get_stations(url_api=all_stations):
     return json_list
 
 
-# check if encapsulation works:
-data = get_stations()
-print(data)
-print(type(data))
-print(data[0])
-
-for x in data[0]:
-    print(x)
-    print(type(x))
-
-
-def populate_db_stations(stations_data):
-    keys = ['id', 'stationName', 'gegrLat', 'gegrLon', 'addressStreet', 'city_id', 'city_name',
-            'communeName', 'districtName', 'provinceName']
+def populate_db_stations(data):
+    # keys = ['id', 'stationName', 'gegrLat', 'gegrLon', 'addressStreet', 'city_id', 'city_name',
+    #         'communeName', 'districtName', 'provinceName']
 
     conn = sqlite3.connect('air_quality.db')
     c = conn.cursor()
 
-    for station in stations_data:
-        station_entry = [station.get(key, None) for key in keys]
-        print(station_entry)
-        print(type(station_entry[6]))
-        # c.executemany("INSERT INTO stations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", station_entry)
+    # for station in stations_data:
+    #     station_entry = [station.get(key, None) for key in keys]
+    #     print(station_entry)
+    #     print(type(station_entry[6]))
 
+    c.executemany("INSERT INTO stations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", data)
+    print(f"It seems like all the data has been inserted correctly")
     conn.commit()
     conn.close()
 
-# populate_db_stations(data)
+
+stations_data = get_stations()
+populate_db_stations(stations_data)
