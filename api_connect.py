@@ -74,6 +74,14 @@ def get_sensors(limit=1):
     return json_list
 
 
-# checking if works
-three_params = get_sensors(limit=1)
+def populate_db_sensors(data):
+    conn = sqlite3.connect('air_quality.db')
+    c = conn.cursor()
+
+    c.executemany("INSERT INTO sensors VALUES (?, ?, ?, ?, ?, ?);", data)
+    print(f"It seems like all the data has been inserted correctly")
+    conn.commit()
+    conn.close()
+
+
 
