@@ -94,7 +94,7 @@ def get_sensor_indexes_from_db():
     return indexes
 
 
-def get_sensor_data(limit=1):
+def get_insert_sensor_data(limit=1):
     indexes = get_sensor_indexes_from_db()
     base_url = 'https://api.gios.gov.pl/pjp-api/rest/data/getData/'
 
@@ -115,28 +115,22 @@ def get_sensor_data(limit=1):
         key = list(data_json.values())[0]
         lst = list(data_json.values())[1]
 
-        df = pd.json_normalize(lst[1:50], sep='_')      # It returns data 62 hours back, and last one is usually NULL
+        df = pd.json_normalize(lst[1:49], sep='_')      # It returns data 62 hours back, and last one is usually NULL
         df.insert(0, 'dataCode', key)
         df.insert(0, 'sensorId', index)
 
         all_data = pd.concat([all_data, df], ignore_index=True)
 
     json_list = all_data.values.tolist()
-    print(json_list)    # change to return
-    # INT, STR, STR (date), FLOAT 2022-02-18 14:00:00
 
-    testowo = json_list[0]
-    print(testowo)
-    for t in testowo:
-        print(t)
-        print(type(t))
+    conn = sqlite3.connect('air_quality.db')
+    c = conn.cursor()
 
-    # all_data = all_data.rename(columns={'param_paramName': 'paramName', 'param_paramFormula': 'paramFormula',
-    #                                     'param_paramCode': 'paramCode', 'param_idParam': 'idParam'})
-    # json_list = all_data.values.tolist()
-
-    # return json_list
+    c.executemany("INSERT OR IGNORE INTO sensorData VALUES (?, ?, ?, ?);", json_list)
+    print(f"It seems like all the data has been inserted correctly")
+    conn.commit()
+    conn.close()
 
 
-get_sensor_data(limit=2)
+get_insert_sensor_data(limit=3)
 
