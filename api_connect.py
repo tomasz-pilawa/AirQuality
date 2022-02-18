@@ -84,4 +84,17 @@ def populate_db_sensors(data):
     conn.close()
 
 
+def get_sensor_indexes_from_db():
+    conn = sqlite3.connect('air_quality.db')
+    c = conn.cursor()
+    c.execute('SELECT id FROM sensors;')
+    indexes = [x[0] for x in c.fetchall()]
+    conn.commit()
+    conn.close()
+    return indexes
+
+
+sensor_indexes = get_sensor_indexes_from_db()
+print(sensor_indexes)
+
 
