@@ -10,3 +10,5 @@ import api_connect as a
 
 # sensors_data = a.get_sensors(limit=205)
 # a.populate_db_sensors(sensors_data)
+
+# create_tables.create_table_sensor_data()

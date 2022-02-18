@@ -48,5 +48,3 @@ def create_table_sensor_data():
     value REAL,
     UNIQUE (sensorId, dataCode, date));
     ''')
-
-create_table_sensor_data()
